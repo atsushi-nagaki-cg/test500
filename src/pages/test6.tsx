@@ -1,3 +1,5 @@
+import withGetServerSidePropsTimeout from "@/utils/withGetServerSidePropsTimeout"
+
 type Props = {
   text: string
 }
@@ -13,9 +15,9 @@ export default function Index({ text }: Props) {
   )
 }
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = withGetServerSidePropsTimeout(async () => {
   await sleep(6000)
   return {
     props: { text: "Hello World!" },
   }
-}
+}, 2000)
