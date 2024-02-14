@@ -18,8 +18,7 @@ export default function withGetServerSidePropsTimeout<
     )
 
     try {
-      const result = await Promise.race([fn(context), timeoutPromise])
-      return result
+      return await Promise.race([fn(context), timeoutPromise])
     } catch (error) {
       throw new Error("getServerSideProps exception")
     }
