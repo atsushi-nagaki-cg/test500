@@ -13,9 +13,6 @@ export default function Index({ text }: Props) {
   )
 }
 
-export const getServerSideProps = async () => {
-  await sleep(6000)
-  return {
-    props: { text: "Hello World!" },
-  }
+export const getServerSideProps = () => {
+  throw new Error("Throwing an error from getServerSideProps")
 }

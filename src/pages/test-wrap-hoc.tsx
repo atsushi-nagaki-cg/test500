@@ -9,7 +9,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 export default function Index({ text }: Props) {
   return (
     <>
-      <h1>Test6</h1>
+      <h1>Test Wrap HOC</h1>
       <p>{text}</p>
     </>
   )
