@@ -1,10 +1,16 @@
-import { GetServerSideProps, GetServerSidePropsContext } from "next"
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  GetServerSidePropsResult,
+} from "next"
 
-export default async function withGSSPTimeout<T extends { [key: string]: any }>(
+export default function withGSSPTimeout<T extends { [key: string]: any }>(
   fn: GetServerSideProps<T>,
   duration: number
-): Promise<GetServerSideProps<T>> {
-  return async (context: GetServerSidePropsContext) => {
+): GetServerSideProps<T> {
+  return async (
+    context: GetServerSidePropsContext
+  ): Promise<GetServerSidePropsResult<T>> => {
     const id = setTimeout(() => {
       throw new Error("getServerSideProps timed out")
     }, duration)
@@ -13,7 +19,7 @@ export default async function withGSSPTimeout<T extends { [key: string]: any }>(
       clearTimeout(id)
       return result
     } catch (error) {
-      throw new Error("getServerSideProps timed out")
+      throw new Error("getServerSideProps exception")
     }
   }
 }
