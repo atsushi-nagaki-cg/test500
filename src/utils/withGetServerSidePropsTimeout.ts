@@ -5,32 +5,23 @@ import {
 } from "next"
 
 export default function withGetServerSidePropsTimeout<
-  P extends { [key: string]: any }
->(
-  getServerSidePropsFunc: GetServerSideProps<P>,
-  timeout: number
-): GetServerSideProps<P> {
-  return async (
-    context: GetServerSidePropsContext
-  ): Promise<GetServerSidePropsResult<P>> => {
-    const timeoutPromise = new Promise<GetServerSidePropsResult<P>>(
+  T extends { [key: string]: any }
+>(fn: GetServerSideProps<T>, duration: number) {
+  return async (context: GetServerSidePropsContext) => {
+    const timeoutPromise = new Promise<GetServerSidePropsResult<T>>(
       (_, reject) => {
         setTimeout(
           () => reject(new Error("getServerSideProps timed out")),
-          timeout
+          duration
         )
       }
     )
 
     try {
-      const result = await Promise.race([
-        getServerSidePropsFunc(context),
-        timeoutPromise,
-      ])
+      const result = await Promise.race([fn(context), timeoutPromise])
       return result
     } catch (error) {
-      console.error(error)
-      throw new Error("getServerSideProps timed out")
+      throw new Error("getServerSideProps exception")
     }
   }
 }
